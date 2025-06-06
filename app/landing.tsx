@@ -24,13 +24,13 @@ interface BubbleProps {
   size: number;
   left: number;
   top: number;
-} 
+}
 
 const { height, width } = Dimensions.get("window");
 const isSmallDevice = height < 700;
 
 const Bubble: React.FC<BubbleProps> = ({ size, left, top }) => {
-  // ... (keep your existing Bubble component implementation)
+
 };
 
 export default function Landingpage() {
@@ -38,22 +38,22 @@ export default function Landingpage() {
   const scrollViewRef = useRef<ScrollView>(null);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRefs = useRef<Array<TextInput | null>>([]);
-  
+
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow', 
+      'keyboardDidShow',
       (e: KeyboardEvent) => {
         setKeyboardHeight(e.endCoordinates.height);
       }
     );
-    
+
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide', 
+      'keyboardDidHide',
       () => {
         setKeyboardHeight(0);
       }
     );
-    
+
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
@@ -80,7 +80,7 @@ export default function Landingpage() {
         <Bubble size={70} left={0.7} top={150} />
         <Text style={styles.titlepage}>Let`s get you signed in!</Text>
       </View>
-      
+
       <ScrollView
         ref={scrollViewRef}
         style={styles.maincontainer}
@@ -90,56 +90,55 @@ export default function Landingpage() {
       >
         <View style={styles.formdiscription}>
           <Text style={styles.descriptionText}>
-            Please use Registration
+            Register first To get  Started
           </Text>
           <Text style={styles.signUpText}>
             Sign Up
           </Text>
         </View>
-        
-        <KeyboardAvoidingView style={styles.formcontainer}>
-          <TextInput 
-            ref={ref => inputRefs.current[0] = ref}
-            style={styles.textarea} 
-            placeholder="Firstname"
-            onFocus={() => handleInputFocus(0)}
-          />
-        </KeyboardAvoidingView>
-        
-        <View style={styles.formcontainer}>
-          <TextInput 
-            ref={ref => inputRefs.current[1] = ref}
-            style={styles.textarea} 
-            placeholder="Lastname"
-            onFocus={() => handleInputFocus(1)}
-          />
-        </View>
-        
-        <View style={styles.formcontainer}>
-          <TextInput 
-            ref={ref => inputRefs.current[2] = ref}
-            style={styles.textarea} 
-            placeholder="+255....." 
-            keyboardType="phone-pad"
-            onFocus={() => handleInputFocus(2)}
-          />
-        </View>
-        
-        <View style={styles.formcontainerPicker}>
-          <Picker>
-            <Picker.Item label="Disorder" value="disorder" />
-            <Picker.Item label="None" value="none" />
-          </Picker>
-        </View>
-        
-        <TouchableOpacity 
-          style={styles.btn} 
-          onPress={() => route.replace("./")}
-        >
-          <View style={styles.btncontainer}>
-            <Text style={styles.btnText}>Register</Text>
+          <View style={styles.formcontainer}>
+            <TextInput
+              ref={ref => inputRefs.current[0] = ref}
+              style={styles.textarea}
+              placeholder="Firstname"
+              onFocus={() => handleInputFocus(0)}
+            />
           </View>
-        </TouchableOpacity>
+
+          <View style={styles.formcontainer}>
+            <TextInput
+              ref={ref => inputRefs.current[1] = ref}
+              style={styles.textarea}
+              placeholder="Lastname"
+              onFocus={() => handleInputFocus(1)}
+            />
+          </View>
+
+          <View style={styles.formcontainer}>
+            <TextInput
+              ref={ref => inputRefs.current[2] = ref}
+              style={styles.textarea}
+              placeholder="+255....."
+              keyboardType="phone-pad"
+              onFocus={() => handleInputFocus(2)}
+            />
+          </View>
+
+          {/* <View style={styles.formcontainerPicker}>
+            <Picker>
+              <Picker.Item label="Disorder" value="disorder" />
+              <Picker.Item label="None" value="none" />
+            </Picker>
+          </View> */}
+
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => route.push("./(main)/dashboard")}
+          >
+            <View style={styles.btncontainer}>
+              <Text style={styles.btnText}>Register</Text>
+            </View>
+          </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -159,7 +158,7 @@ const styles = StyleSheet.create({
   },
   maincontainer: {
     flex: 1,
-    backgroundColor: "#",
+    backgroundColor: "#f2f2f2",
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
   },
@@ -189,7 +188,7 @@ const styles = StyleSheet.create({
     width: "85%",
     borderWidth: 1,
     borderColor: "#D6D6D6",
-    backgroundColor: "#D6D6D6",
+    backgroundColor: "white",
     borderRadius: 18,
     height: isSmallDevice ? 45 : 50,
     justifyContent: "center",
@@ -234,8 +233,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnText: {
-    color: "white", 
-    fontWeight: "800", 
+    color: "white",
+    fontWeight: "800",
     fontSize: isSmallDevice ? 16 : 18
   },
   titlepage: {
