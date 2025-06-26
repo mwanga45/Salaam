@@ -6,19 +6,13 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
-  Animated,
-  Easing,
-  Platform,
   ScrollView,
   Keyboard,
   KeyboardEvent,
-  NativeSyntheticEvent,
-  TextInputFocusEventData,
-  KeyboardAvoidingView
+  LayoutChangeEvent,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Picker } from "@react-native-picker/picker";
 
 interface BubbleProps {
   size: number;
@@ -30,14 +24,25 @@ const { height, width } = Dimensions.get("window");
 const isSmallDevice = height < 700;
 
 const Bubble: React.FC<BubbleProps> = ({ size, left, top }) => {
-
+  const bubbleStyle = {
+    width: size,
+    height: size,
+    left: width * left,
+    top: top,
+    borderRadius: size / 2,
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+    position: 'absolute' as 'absolute',
+    zIndex: 1,
+  };
+  return <View style={bubbleStyle} />;
 };
 
 export default function Landingpage() {
   const route = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const inputRefs = useRef<Array<TextInput | null>>([]);
+  const inputRefs = useRef<(TextInput | null)[]>([]);
+  const inputLayouts = useRef<{ [key: number]: number }>({});
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -61,13 +66,18 @@ export default function Landingpage() {
   }, []);
 
   const handleInputFocus = (index: number) => {
-    // Scroll to input when focused
     setTimeout(() => {
-      scrollViewRef.current?.scrollTo({
-        y: index * 70,
-        animated: true
-      });
+      if (inputLayouts.current[index] !== undefined) {
+        scrollViewRef.current?.scrollTo({
+          y: inputLayouts.current[index],
+          animated: true
+        });
+      }
     }, 100);
+  };
+
+  const handleInputLayout = (event: LayoutChangeEvent, index: number) => {
+    inputLayouts.current[index] = event.nativeEvent.layout.y;
   };
 
   return (
@@ -78,7 +88,7 @@ export default function Landingpage() {
         <Bubble size={100} left={0.35} top={300} />
         <Bubble size={50} left={0.1} top={400} />
         <Bubble size={70} left={0.7} top={150} />
-        <Text style={styles.titlepage}>Let`s get you signed in!</Text>
+        <Text style={styles.titlepage}>Let's get you signed in!</Text>
       </View>
 
       <ScrollView
@@ -90,13 +100,13 @@ export default function Landingpage() {
       >
         <View style={styles.formdiscription}>
           <Text style={styles.descriptionText}>
-            Register first To get  Started
+            Register first To get Started
           </Text>
           <Text style={styles.signUpText}>
             Sign Up
           </Text>
         </View>
-          <View style={styles.formcontainer}>
+          <View style={styles.formcontainer} onLayout={(e) => handleInputLayout(e, 0)}>
             <TextInput
               ref={ref => inputRefs.current[0] = ref}
               style={styles.textarea}
@@ -105,7 +115,7 @@ export default function Landingpage() {
             />
           </View>
 
-          <View style={styles.formcontainer}>
+          <View style={styles.formcontainer} onLayout={(e) => handleInputLayout(e, 1)}>
             <TextInput
               ref={ref => inputRefs.current[1] = ref}
               style={styles.textarea}
@@ -114,7 +124,7 @@ export default function Landingpage() {
             />
           </View>
 
-          <View style={styles.formcontainer}>
+          <View style={styles.formcontainer} onLayout={(e) => handleInputLayout(e, 2)}>
             <TextInput
               ref={ref => inputRefs.current[2] = ref}
               style={styles.textarea}
@@ -123,13 +133,6 @@ export default function Landingpage() {
               onFocus={() => handleInputFocus(2)}
             />
           </View>
-
-          {/* <View style={styles.formcontainerPicker}>
-            <Picker>
-              <Picker.Item label="Disorder" value="disorder" />
-              <Picker.Item label="None" value="none" />
-            </Picker>
-          </View> */}
 
           <TouchableOpacity
             style={styles.btn}
@@ -148,7 +151,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     justifyContent: "space-between",
-    backgroundColor: "#",
+    backgroundColor: "#ffffff",
   },
   titlecontainer: {
     height: isSmallDevice ? '30%' : '35%',
@@ -195,17 +198,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginVertical: 8,
   },
-  formcontainerPicker: {
-    width: "85%",
-    borderWidth: 1,
-    borderColor: "#D6D6D6",
-    backgroundColor: "#D6D6D6",
-    borderRadius: 18,
-    height: isSmallDevice ? 50 : 55,
-    justifyContent: "center",
-    paddingHorizontal: 12,
-    marginVertical: 8,
-    overflow: "hidden",
+  textarea: {
+    fontSize: isSmallDevice ? 14 : 16,
+    color: '#333',
   },
   btn: {
     width: "85%",
@@ -214,17 +209,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 20,
     marginBottom: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   btncontainer: {
     width: "100%",
@@ -244,15 +236,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 20,
     zIndex: 10,
-  },
-  bubble: {
-    position: 'absolute',
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 100,
-    pointerEvents: 'none',
-  },
-  textarea: {
-    fontSize: isSmallDevice ? 14 : 16,
-    height: '100%',
   },
 });

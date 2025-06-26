@@ -145,7 +145,7 @@ const FinancialDashboard = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Quick Actions</Text>
         <View style={styles.quickActions}>
-          <TouchableOpacity style={styles.quickAction}>
+          <TouchableOpacity style={styles.quickAction} onPress={()=>router.push('/asnycTest') }>
             <View style={[styles.quickActionIcon, { backgroundColor: '#E3F2FD' }]}>
               <Text style={[styles.quickActionIconText, { color: '#2196F3' }]}>💳</Text>
             </View>

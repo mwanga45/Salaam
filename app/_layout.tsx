@@ -29,7 +29,14 @@ export default function Layout() {
           backgroundColor:"#081107"
         }
       }}/>
+      <Stack.Screen name="asnycTest" options={{
+        headerShown:false,
+        title:"",
+        contentStyle:{
+          backgroundColor:"white"
+        }
+      }}/>
       </Stack>
     </>
   );
-}
+} 
