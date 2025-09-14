@@ -24,7 +24,7 @@ useEffect(()=>{
   ]).start()
 
   const Timer = setInterval(()=>{
-    // route.replace("/home/home")
+  
     route.replace("./landing")
   },2000)
 
@@ -43,9 +43,8 @@ useEffect(()=>{
           },
         ]}
       >
-        {/* <Ionicons name="school" size={100} color="white" /> */}
-        <Icon name="credit-card" size={60} color="green" />
-        <Text style={styles.appName}>Mypocket Rescue!</Text>
+        <Icon name="hand-peace-o" size={60} color="white" />
+        <Text style={styles.appName}>Salaam</Text>
         <Text style={{color:"grey", fontSize:12, fontWeight:500}}>Power by @45Mwanga</Text>
       </Animated.View>
     </View>
@@ -56,7 +55,7 @@ useEffect(()=>{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#15AAE6",
+    backgroundColor: "#0031a2ff",
     alignItems: "center",
     justifyContent: "center",
   },
